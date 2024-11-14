@@ -1,6 +1,8 @@
 module Lib
 
 import Data.List
+import Data.List.Extra
+import Data.Vect
 
 genInd : Nat -> Nat -> List (Nat, Nat)
 genInd s l =
@@ -70,3 +72,36 @@ combineMaybe f ma mb = liftA2 f ma mb <|> ma <|> mb
 export
 pairMaybe : Maybe a -> Maybe b -> Maybe (a,b)
 pairMaybe ma mb = pure (,) <*> ma <*> mb
+
+||| zip with index (0-indexed)
+export
+zipWithIndex : List a -> List (Nat, a)
+zipWithIndex = mapi (,)
+
+||| try to index a List, if the index is out of bound return Nothing
+export
+indexMaybe : Nat -> List a -> Maybe a
+indexMaybe Z (x :: _) = Just x
+indexMaybe (S i) (_::xs) = indexMaybe i xs
+indexMaybe _ [] = Nothing
+
+||| try to substract from a nat
+export
+safePred : Nat -> Maybe Nat
+safePred Z = Nothing
+safePred (S n) = Just n
+
+||| self-explatory, create the all the permutation of a b
+export
+permutation : List a -> List b -> List (a,b)
+-- permutation xx yy = join $ map (\x => map (\y => (x,y) ) yy) xx
+permutation xx yy = concatMap (\x => map (\y => (x,y) ) yy) xx
+
+export
+unsafeIndex : Nat -> List a -> a
+unsafeIndex n xs =
+  let vect : Vect (length xs) a
+      vect = fromList xs
+      idx : Fin (length xs)
+      idx = believe_me n
+  in index idx vect

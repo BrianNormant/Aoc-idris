@@ -1,11 +1,8 @@
 module Main
 
-import Day1
+import Day4
 
 main : IO ()
 main = do
-  Day1.run1
-  Day1.run2
-
-fn : String -> String
-fn = strtail
+  run1
+  run2

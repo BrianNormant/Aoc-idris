@@ -105,3 +105,17 @@ unsafeIndex n xs =
       idx : Fin (length xs)
       idx = believe_me n
   in index idx vect
+
+||| apply a function if a condition is true
+export
+replaceIf : (a -> Bool) -> (a -> a) -> List a -> List a
+replaceIf f g (x::xs) = (if f x then g x else x) :: replaceIf f g xs
+replaceIf _ _ [] = []
+
+
+
+||| map a function if a condition over the index is true
+export
+replaceIfIndex : (Nat -> Bool) -> (a -> a) -> List a -> List a
+replaceIfIndex f g xs = map snd
+  $ replaceIf (f . fst) (\(i,v) => (i, g v)) (mapi (,) xs)

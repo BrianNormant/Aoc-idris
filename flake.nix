@@ -23,6 +23,7 @@
 			];
 			shellHook = ''
 				export SHELL=zsh
+				export IDRIS2_PACKAGE_PATH=$(pack package-path)
 				exec zsh
 				'';
 		};
